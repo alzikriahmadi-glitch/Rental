@@ -1,0 +1,419 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Panel Admin - TravelGo</title> 
+  <link rel="stylesheet" href="css/style.css"> 
+  <link rel="stylesheet" href="css/components.css"> 
+  <link rel="stylesheet" href="css/responsive.css"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; } 
+    body { font-family: 'Segoe UI', sans-serif; background: #F0F4FF; } 
+ 
+    /* LAYOUT */ 
+    .admin-layout { display: flex; min-height: 100vh; } 
+ 
+    /* SIDEBAR */ 
+    .admin-sidebar { 
+      width: 240px; flex-shrink: 0; 
+      background: linear-gradient(180deg, #0F2460 0%, #1A56DB 100%); 
+      display: flex; flex-direction: column; 
+      padding: 0; position: fixed; top: 0; left: 0; bottom: 0; 
+      box-shadow: 4px 0 20px rgba(0,0,0,0.15); 
+      z-index: 50; 
+    } 
+    .sidebar-header { 
+      padding: 24px 20px; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+      display: flex; flex-direction: column; 
+      align-items: center; gap: 8px; 
+    } 
+    .sidebar-header img { 
+      height: 52px; width: auto; 
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); 
+    } 
+    .sidebar-role { 
+      background: rgba(255,255,255,0.15); 
+      color: rgba(255,255,255,0.9); 
+      font-size: 0.75rem; font-weight: 700; 
+      padding: 3px 12px; border-radius: 20px; 
+      letter-spacing: 1px; text-transform: uppercase; 
+    } 
+    .sidebar-nav { padding: 16px 12px; flex: 1; } 
+    .nav-item { 
+      display: flex; align-items: center; gap: 10px; 
+      padding: 12px 16px; color: rgba(255,255,255,0.7); 
+      text-decoration: none; border-radius: 10px; 
+      font-size: 0.9rem; font-weight: 500; 
+      transition: all 0.2s; margin-bottom: 4px; 
+      cursor: pointer; 
+    } 
+    .nav-item:hover { background: rgba(255,255,255,0.12); color: white; } 
+    .nav-item.active { background: rgba(255,255,255,0.2); color: white; font-weight: 700; } 
+    .nav-item.danger { color: rgba(255,150,150,0.8); margin-top: auto; } 
+    .nav-item.danger:hover { background: rgba(255,100,100,0.15); color: #FCA5A5; } 
+    .nav-icon { font-size: 1.1rem; } 
+    .sidebar-footer { 
+      padding: 16px 12px; 
+      border-top: 1px solid rgba(255,255,255,0.1); 
+    } 
+ 
+    /* MAIN */ 
+    .admin-main { 
+      margin-left: 240px; flex: 1; 
+      padding: 32px; min-height: 100vh; 
+    } 
+ 
+    /* TOPBAR */ 
+    .topbar { 
+ display: flex; align-items: center; 
+      justify-content: space-between; 
+      margin-bottom: 28px; 
+    } 
+    .topbar-title { font-size: 1.4rem; font-weight: 800; color: #1F2937; } 
+    .topbar-user { 
+      display: flex; align-items: center; gap: 10px; 
+      background: white; padding: 8px 16px; 
+      border-radius: 12px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); 
+      font-size: 0.88rem; color: #6B7280; 
+    } 
+    .topbar-user strong { color: #1F2937; } 
+ 
+    /* SECTION */ 
+    .admin-section { display: none; } 
+    .admin-section.active { display: block; } 
+ 
+    /* CARD */ 
+    .admin-card { 
+      background: white; border-radius: 16px; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); 
+      padding: 28px; margin-bottom: 24px; 
+    } 
+    .admin-card h2 { 
+      font-size: 1.1rem; font-weight: 800; 
+      color: #1F2937; margin-bottom: 20px; 
+      padding-bottom: 12px; 
+      border-bottom: 2px solid #F3F4F6; 
+      display: flex; align-items: center; gap: 8px; 
+    } 
+    .admin-card h3 { 
+      font-size: 1rem; font-weight: 700; 
+      color: #1F2937; margin-bottom: 16px; 
+      margin-top: 8px; 
+    } 
+ 
+    /* FORM */ 
+    .admin-form .form-row { 
+      display: flex; gap: 16px; margin-bottom: 16px; 
+    } 
+    .admin-form .form-row .form-group { flex: 1; margin-bottom: 0; } 
+    .form-group { margin-bottom: 16px; } 
+    .form-group label { 
+      display: block; margin-bottom: 6px; 
+      font-size: 0.78rem; font-weight: 700; 
+      color: #6B7280; text-transform: uppercase; 
+      letter-spacing: 0.5px; 
+   } 
+    .form-group input, .form-group select { 
+      width: 100%; padding: 10px 14px; 
+      border: 2px solid #E5E7EB; border-radius: 10px; 
+      font-size: 0.92rem; color: #1F2937; 
+      background: #FAFAFA; transition: all 0.2s; 
+    } 
+    .form-group input:focus, .form-group select:focus { 
+      outline: none; border-color: #1A56DB; 
+      background: white; 
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.08); 
+    } 
+    .days-picker { 
+      display: flex; gap: 8px; flex-wrap: wrap; 
+      margin-top: 8px; 
+    } 
+    .days-picker label { 
+      display: flex; align-items: center; gap: 6px; 
+      background: #F0F4FF; border: 1.5px solid #BFDBFE; 
+      border-radius: 8px; padding: 6px 12px; 
+      cursor: pointer; font-size: 0.85rem; 
+      font-weight: 600; color: #1D4ED8; 
+      transition: all 0.2s; 
+      text-transform: none; letter-spacing: 0; 
+    } 
+    .days-picker label:hover { background: #DBEAFE; } 
+    .days-picker input[type="checkbox"] { accent-color: #1A56DB; } 
+    .btn-save { 
+      background: linear-gradient(135deg, #1A56DB, #2563EB); 
+      color: white; border: none; 
+      padding: 12px 28px; border-radius: 10px; 
+      font-size: 0.95rem; font-weight: 700; 
+      cursor: pointer; transition: all 0.2s; 
+      box-shadow: 0 4px 12px rgba(26,86,219,0.25); 
+    } 
+    .btn-save:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 6px 18px rgba(26,86,219,0.35); 
+    } 
+ 
+    /* TABEL */ 
+    .table-wrapper { overflow-x: auto; margin-top: 8px; } 
+    .data-table { 
+      width: 100%; border-collapse: collapse; 
+      font-size: 0.88rem; 
+    } 
+    .data-table thead tr { 
+      background: linear-gradient(90deg, #1A56DB, #2563EB); 
+   } 
+    .data-table th { 
+      padding: 12px 16px; color: white; 
+      font-weight: 700; text-align: left; 
+      font-size: 0.8rem; text-transform: uppercase; 
+      letter-spacing: 0.5px; 
+    } 
+    .data-table td { 
+      padding: 12px 16px; 
+      border-bottom: 1px solid #F3F4F6; 
+      color: #374151; 
+    } 
+    .data-table tbody tr:hover td { background: #F0F4FF; } 
+    .data-table tbody tr:last-child td { border-bottom: none; } 
+    .btn-hapus { 
+      background: #FEE2E2; color: #DC2626; 
+      border: none; padding: 5px 12px; 
+      border-radius: 6px; cursor: pointer; 
+      font-size: 0.82rem; font-weight: 700; 
+      transition: all 0.2s; 
+    } 
+    .btn-hapus:hover { background: #DC2626; color: white; } 
+ 
+    /* BADGE ROLE */ 
+    .badge-role { 
+      padding: 3px 10px; border-radius: 20px; 
+      font-size: 0.78rem; font-weight: 700; 
+    } 
+    .badge-role.admin { background: #FEE2E2; color: #991B1B; } 
+    .badge-role.merchant { background: #FEF3C7; color: #92400E; } 
+    .badge-role.customer { background: #D1FAE5; color: #065F46; } 
+ 
+    /* STATS */ 
+    .stats-grid { 
+      display: grid; grid-template-columns: repeat(3, 1fr); 
+      gap: 16px; margin-bottom: 24px; 
+    } 
+    .stat-card { 
+      background: white; border-radius: 14px; 
+      padding: 20px 24px; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); 
+      display: flex; align-items: center; gap: 16px; 
+    } 
+    .stat-icon { 
+      width: 48px; height: 48px; border-radius: 12px; 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 1.4rem; 
+    }  .stat-icon.blue { background: #EFF6FF; } 
+    .stat-icon.green { background: #F0FDF4; } 
+    .stat-icon.amber { background: #FFFBEB; } 
+    .stat-num { font-size: 1.6rem; font-weight: 800; color: #1F2937; } 
+    .stat-label { font-size: 0.82rem; color: #6B7280; margin-top: 2px; } 
+ 
+    @media (max-width: 768px) { 
+      .admin-sidebar { width: 200px; } 
+      .admin-main { margin-left: 200px; padding: 20px; } 
+      .admin-form .form-row { flex-direction: column; } 
+      .stats-grid { grid-template-columns: 1fr; } 
+    } 
+  </style> 
+</head> 
+<body> 
+ 
+<div class="admin-layout"> 
+ 
+  <!-- SIDEBAR --> 
+  <aside class="admin-sidebar"> 
+    <div class="sidebar-header"> 
+      <img src="assets/logo_travelgo.svg" alt="TravelGo"> 
+      <span class="sidebar-role">Admin Panel</span> 
+    </div> 
+    <nav class="sidebar-nav"> 
+      <a class="nav-item active" onclick="showSection('schedules', this)"> 
+        <span class="nav-icon">               </span> Kelola Jadwal 
+      </a> 
+      <a class="nav-item" onclick="showSection('orders', this)"> 
+        <span class="nav-icon">        </span> Semua Pesanan 
+      </a> 
+      <a class="nav-item" onclick="showSection('users', this)"> 
+        <span class="nav-icon">  </span> Kelola Pengguna 
+      </a> 
+    </nav> 
+    <div class="sidebar-footer"> 
+      <a class="nav-item danger" onclick="logout()"> 
+        <span class="nav-icon">     </span> Keluar 
+      </a> 
+    </div> 
+  </aside> 
+ 
+  <!-- MAIN --> 
+  <main class="admin-main"> 
+ 
+    <!-- TOPBAR --> 
+    <div class="topbar"> 
+      <div class="topbar-title" id="sectionTitle">                
+        Kelola Jadwal</div><div class="topbar-user"> 
+        <span>    </span> 
+        <span>Masuk sebagai <strong id="adminName">Admin</strong></span> 
+      </div> 
+    </div> 
+ 
+    <!-- STATS --> 
+    <div class="stats-grid" id="statsGrid"> 
+      <div class="stat-card"> 
+        <div class="stat-icon blue">               </div> 
+        <div> 
+          <div class="stat-num" id="statJadwal">0</div> 
+          <div class="stat-label">Total Jadwal</div> 
+        </div> 
+      </div> 
+      <div class="stat-card"> 
+        <div class="stat-icon green">        </div> 
+        <div> 
+          <div class="stat-num" id="statPesanan">0</div> 
+          <div class="stat-label">Total Pesanan</div> 
+        </div> 
+      </div> 
+      <div class="stat-card"> 
+        <div class="stat-icon amber">  </div> 
+        <div> 
+          <div class="stat-num" id="statUser">0</div> 
+          <div class="stat-label">Total Pengguna</div> 
+        </div> 
+      </div> 
+    </div> 
+ 
+    <!-- SECTION: JADWAL --> 
+    <div id="section-schedules" class="admin-section active"> 
+      <div class="admin-card"> 
+        <h2>  Tambah Jadwal Baru</h2> 
+        <form id="addScheduleForm" class="admin-form"> 
+          <div class="form-row"> 
+            <div class="form-group"> 
+              <label>Jenis Armada</label> 
+              <select id="sc_type"> 
+                <option value="pesawat">     Pesawat</option> 
+                <option value="kereta">          Kereta Api</option> 
+                <option value="kapal">              Kapal Laut</option> 
+                <option value="bus">        Bus</option> 
+              </select> 
+            </div> 
+            <div class="form-group">
+                <label>Nama Operator</label> 
+              <input type="text" id="sc_operator" placeholder="Garuda Indonesia"> 
+            </div> 
+          </div> 
+          <div class="form-row"> 
+            <div class="form-group"> 
+              <label>Kota Asal</label> 
+              <input type="text" id="sc_from" placeholder="Jakarta (CGK)"> 
+            </div> 
+            <div class="form-group"> 
+              <label>Kota Tujuan</label> 
+              <input type="text" id="sc_to" placeholder="Bali (DPS)"> 
+            </div> 
+          </div> 
+          <div class="form-row"> 
+            <div class="form-group"> 
+              <label>Jam Berangkat</label> 
+              <input type="time" id="sc_depart"> 
+            </div> 
+            <div class="form-group"> 
+              <label>Jam Tiba</label> 
+              <input type="time" id="sc_arrive"> 
+            </div> 
+            <div class="form-group"> 
+              <label>Durasi</label> 
+              <input type="text" id="sc_duration" placeholder="2j 10m"> 
+            </div> 
+          </div> 
+          <div class="form-row"> 
+            <div class="form-group"> 
+              <label>Harga (Rp)</label> 
+              <input type="number" id="sc_price" placeholder="850000"> 
+            </div> 
+            <div class="form-group"> 
+              <label>Jumlah Kursi</label> 
+              <input type="number" id="sc_seats" placeholder="120"> 
+            </div> 
+            <div class="form-group"> 
+              <label>Kelas</label> 
+              <input type="text" id="sc_class" placeholder="Ekonomi"> 
+            </div> 
+          </div> 
+          <div class="form-group"> 
+            <label>Hari Beroperasi</label> 
+            <div class="days-picker"> 
+              <label><input type="checkbox" class="day-check" value="Senin"> Senin</label> 
+              <label><input type="checkbox" class="day-check" value="Selasa"> Selasa</label> 
+              <label><input type="checkbox" class="day-check" value="Rabu"> Rabu</label>
+               <label><input type="checkbox" class="day-check" value="Kamis"> Kamis</label> 
+              <label><input type="checkbox" class="day-check" value="Jumat"> Jumat</label> 
+              <label><input type="checkbox" class="day-check" value="Sabtu"> Sabtu</label> 
+              <label><input type="checkbox" class="day-check" value="Minggu"> Minggu</label> 
+            </div> 
+          </div> 
+          <button type="submit" class="btn-save">       Simpan Jadwal</button> 
+        </form> 
+      </div> 
+ 
+      <div class="admin-card"> 
+        <h2>         Daftar Jadwal</h2> 
+        <div class="table-wrapper"> 
+          <div id="scheduleTable"></div> 
+        </div> 
+      </div> 
+    </div> 
+ 
+    <!-- SECTION: PESANAN --> 
+    <div id="section-orders" class="admin-section"> 
+      <div class="admin-card"> 
+        <h2>         Semua Pesanan</h2> 
+        <div class="table-wrapper"> 
+          <div id="ordersTable"></div> 
+        </div> 
+      </div> 
+    </div> 
+ 
+    <!-- SECTION: PENGGUNA --> 
+    <div id="section-users" class="admin-section"> 
+      <div class="admin-card"> 
+        <h2>   Kelola Pengguna</h2> 
+        <div class="table-wrapper"> 
+          <div id="usersTable"></div> 
+        </div> 
+      </div> 
+    </div> 
+ 
+  </main> 
+</div> 
+ 
+  <script src="js/utils.js"></script> 
+  <script src="js/data.js"></script> 
+  <script src="js/auth.js"></script> 
+  <script src="js/admin.js"></script> 
+  <script> 
+    // Tampilkan nama admin 
+    const sess = JSON.parse(localStorage.getItem('tg_session') || 'null');
+     if (sess) document.getElementById('adminName').textContent = sess.name; 
+ 
+    // Update stats 
+    function updateStats() { 
+      const jadwal = JSON.parse(localStorage.getItem('tg_schedules') || '[]').length; 
+      const pesanan = JSON.parse(localStorage.getItem('tg_orders') || '[]').length; 
+      const user = JSON.parse(localStorage.getItem('tg_users') || '[]').length; 
+      document.getElementById('statJadwal').textContent = jadwal; 
+      document.getElementById('statPesanan').textContent = pesanan; 
+      document.getElementById('statUser').textContent = user; 
+    } 
+    updateStats(); 
+  </script> 
+ 
+</body> 
+</html>

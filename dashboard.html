@@ -1,0 +1,280 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Dashboard - TravelGo</title> 
+  <link rel="stylesheet" href="css/style.css"> 
+  <link rel="stylesheet" href="css/components.css"> 
+  <link rel="stylesheet" href="css/responsive.css"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; } 
+    body { font-family: 'Segoe UI', sans-serif; overflow-x: hidden; } 
+ 
+    /* NAVBAR */ 
+    .navbar { 
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+      background: rgba(0,0,0,0.25); 
+      backdrop-filter: blur(10px); 
+      padding: 0 40px; height: 64px; 
+      display: flex; align-items: center; 
+      justify-content: space-between; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+    }
+
+      .nav-brand { display: flex; align-items: center; gap: 10px; } 
+    .nav-brand img { height: 44px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); } 
+    .nav-user { display: flex; align-items: center; gap: 12px; } 
+    .nav-user span { color: rgba(255,255,255,0.9); font-size: 0.92rem; font-weight: 500; } 
+    .btn-logout { 
+      background: rgba(255,255,255,0.15); 
+      color: white; border: 1px solid rgba(255,255,255,0.3); 
+      padding: 7px 18px; border-radius: 8px; 
+      cursor: pointer; font-size: 0.88rem; font-weight: 600; 
+      transition: all 0.2s; 
+    } 
+    .btn-logout:hover { background: rgba(255,255,255,0.28); } 
+ 
+    /* HERO */ 
+    .hero { 
+      min-height: 100vh; 
+      background: url('assets/wallpaper_travelgo.svg') center center / cover no-repeat; 
+      position: relative; 
+      display: flex; flex-direction: column; 
+    } 
+    .hero-overlay { 
+      position: absolute; inset: 0; 
+      background: linear-gradient( 
+        to bottom, 
+        rgba(0,0,0,0.5) 0%, 
+        rgba(0,0,0,0.3) 40%, 
+        rgba(0,0,0,0.6) 100% 
+      ); 
+    } 
+ 
+    /* BODY */ 
+    .hero-body { 
+      position: relative; z-index: 2; 
+      display: flex; flex-direction: column; 
+      align-items: center; justify-content: center; 
+      flex: 1; padding: 100px 40px 60px; 
+      gap: 40px; 
+    } 
+ 
+    /* GREETING */ 
+    .greeting { text-align: center; color: white; } 
+    .greeting h1 { 
+      font-size: 2.4rem; font-weight: 800; 
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4); 
+      margin-bottom: 8px; 
+    } 
+    .greeting p { 
+      font-size: 1.05rem; opacity: 0.85; 
+   text-shadow: 0 1px 8px rgba(0,0,0,0.3); 
+    } 
+ 
+    /* TRANSPORT GRID */ 
+    .transport-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 16px; width: 100%; max-width: 700px; 
+    } 
+    .transport-card { 
+      background: rgba(255,255,255,0.12); 
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px); 
+      border: 1px solid rgba(255,255,255,0.25); 
+      border-radius: 18px; 
+      padding: 24px 20px; 
+      display: flex; align-items: center; gap: 16px; 
+      cursor: pointer; transition: all 0.25s; 
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
+    } 
+    .transport-card:hover { 
+      background: rgba(255,255,255,0.22); 
+      transform: translateY(-4px); 
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3); 
+      border-color: rgba(255,255,255,0.45); 
+    } 
+    .card-icon { 
+      width: 56px; height: 56px; 
+      border-radius: 16px; 
+      display: flex; align-items: center; 
+      justify-content: center; flex-shrink: 0; 
+      overflow: hidden; 
+      background: rgba(255,255,255,0.9); 
+    } 
+    .card-icon img { width: 48px; height: 48px; object-fit: cover; border-radius: 12px; } 
+    .airplane-bg { background: rgba(219,234,254,0.25); } 
+    .train-bg    { background: rgba(209,250,229,0.25); } 
+    .ship-bg     { background: rgba(237,233,254,0.25); } 
+    .bus-bg      { background: rgba(254,243,199,0.25); } 
+    .card-info { flex: 1; } 
+    .card-info h3 { 
+      font-size: 1rem; font-weight: 700; 
+      color: white; margin-bottom: 4px; 
+    } 
+    .card-info p { 
+      font-size: 0.82rem; 
+      color: rgba(255,255,255,0.7); 
+    } 
+    .card-arrow { 
+      font-size: 1.6rem; color: rgba(255,255,255,0.5); 
+      font-weight: 300; transition: all 0.2s;
+         } 
+    .transport-card:hover .card-arrow { 
+      color: white; transform: translateX(4px); 
+    } 
+ 
+    /* DESTINASI */ 
+    .dest-section { width: 100%; max-width: 700px; } 
+    .dest-title { 
+      color: rgba(255,255,255,0.7); 
+      font-size: 0.78rem; font-weight: 700; 
+      text-transform: uppercase; letter-spacing: 1px; 
+      margin-bottom: 10px; text-align: center; 
+    } 
+    .dest-grid { display: flex; gap: 12px; } 
+    .dest-card { 
+      flex: 1; border-radius: 14px; 
+      overflow: hidden; position: relative; 
+      height: 120px; cursor: pointer; 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3); 
+      transition: transform 0.2s; 
+    } 
+    .dest-card:hover { transform: translateY(-4px); } 
+    .dest-card img { width: 100%; height: 100%; object-fit: cover; display: block; } 
+    .dest-card-overlay { 
+      position: absolute; bottom: 0; left: 0; right: 0; 
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent); 
+      padding: 10px 8px 6px; color: white; 
+    } 
+    .dest-card-name { font-size: 0.78rem; font-weight: 800; } 
+    .dest-card-desc { font-size: 0.65rem; opacity: 0.8; margin-top: 1px; } 
+ 
+    /* STATS BAR */ 
+    .stats-bar { 
+      position: relative; z-index: 2; 
+      display: flex; 
+      background: rgba(0,0,0,0.4); 
+      backdrop-filter: blur(10px); 
+      border-top: 1px solid rgba(255,255,255,0.1); 
+    } 
+    .stat-item { 
+      flex: 1; padding: 16px 24px; 
+      text-align: center; color: white; 
+      border-right: 1px solid rgba(255,255,255,0.1); 
+    } 
+    .stat-item:last-child { border-right: none; } 
+    .stat-num { font-size: 1.3rem; font-weight: 800; } 
+    .stat-label { font-size: 0.72rem; opacity: 0.7; margin-top: 2px; } 
+
+        @media (max-width: 600px) { 
+      .transport-grid { grid-template-columns: 1fr; } 
+      .dest-grid { gap: 8px; } 
+      .greeting h1 { font-size: 1.8rem; } 
+      .navbar { padding: 0 20px; } 
+    } 
+  </style> 
+</head> 
+<body> 
+ 
+  <!-- NAVBAR --> 
+  <nav class="navbar"> 
+    <div class="nav-brand"> 
+      <img src="assets/logo_travelgo.svg" alt="TravelGo"> 
+    </div> 
+    <div class="nav-user"> 
+      <span id="userName">Loading...</span> 
+      <button class="btn-logout" onclick="logout()">Keluar</button> 
+    </div> 
+  </nav> 
+ 
+  <!-- HERO --> 
+  <div class="hero"> 
+    <div class="hero-overlay"></div> 
+ 
+    <div class="hero-body"> 
+ 
+      <!-- GREETING --> 
+      <div class="greeting"> 
+        <h1>Halo, <span id="greetName"></span>!</h1> 
+        <p>Mau pergi ke mana hari ini?</p> 
+      </div> 
+ 
+      <!-- TRANSPORT GRID --> 
+      <div class="transport-grid"> 
+        <div class="transport-card" onclick="selectTransport('pesawat')"> 
+          <div class="card-icon airplane-bg"><img src="assets/pesawat.svg" alt="Pesawat"></div> 
+          <div class="card-info"> 
+            <h3>Pesawat</h3> 
+            <p>Penerbangan domestik & internasional</p> 
+          </div> 
+          <span class="card-arrow">›</span> 
+        </div> 
+        <div class="transport-card" onclick="selectTransport('kereta')"> 
+          <div class="card-icon train-bg"><img src="assets/kereta.svg" alt="Kereta Api"></div> 
+          <div class="card-info"> 
+            <h3>Kereta Api</h3> 
+            <p>Kereta antar kota di seluruh Indonesia</p> 
+          </div> 
+          <span class="card-arrow">›</span> 
+        </div> 
+        <div class="transport-card" onclick="selectTransport('kapal')"> 
+          <div class="card-icon ship-bg"><img src="assets/kapal.svg" alt="Kapal Laut"></div> 
+          <div class="card-info"> 
+            <h3>Kapal Laut</h3> 
+            <p>Penyeberangan & kapal penumpang</p> 
+          </div> 
+          <span class="card-arrow">›</span> 
+        </div> 
+        <div class="transport-card" onclick="selectTransport('bus')"> 
+          <div class="card-icon bus-bg"><img src="assets/bus.svg" alt="Bus"></div> 
+          <div class="card-info"> 
+            <h3>Bus</h3> 
+            <p>Bus antar kota antar provinsi (AKAP)</p> 
+          </div> 
+          <span class="card-arrow">›</span> 
+        </div> 
+      </div> 
+ 
+       
+ 
+    <!-- STATS BAR --> 
+    <div class="stats-bar"> 
+      <div class="stat-item"> 
+        <div class="stat-num">4+</div> 
+        <div class="stat-label">Jenis Armada</div> 
+      </div> 
+      <div class="stat-item"> 
+        <div class="stat-num">100+</div> 
+        <div class="stat-label">Rute Tersedia</div> 
+      </div> 
+      <div class="stat-item"> 
+        <div class="stat-num">24/7</div> 
+        <div class="stat-label">Layanan Aktif</div> 
+      </div> 
+      <div class="stat-item"> 
+        <div class="stat-num">3</div> 
+        <div class="stat-label">Role Pengguna</div> 
+      </div> 
+    </div> 
+ 
+  </div> 
+ 
+  <script src="js/utils.js"></script> 
+  <script src="js/auth.js"></script> 
+  <script src="js/data.js"></script> 
+ <script> 
+    const session = requireLogin(); 
+    document.getElementById('greetName').textContent = session.name; 
+    document.getElementById('userName').textContent = session.name; 
+ 
+    function selectTransport(type) { 
+      sessionStorage.setItem('selectedTransport', type); 
+      window.location.href = 'schedule.html'; 
+    } 
+  </script> 
+ 
+</body> 
+</html>

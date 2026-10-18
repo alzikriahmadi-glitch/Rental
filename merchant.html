@@ -1,0 +1,241 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Panel Merchant - TravelGo</title> 
+  <link rel="stylesheet" href="css/style.css"> 
+  <link rel="stylesheet" href="css/components.css"> 
+  <link rel="stylesheet" href="css/responsive.css"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; } 
+    body { font-family: 'Segoe UI', sans-serif; overflow-x: hidden; } 
+ 
+    /* NAVBAR */ 
+    .navbar { 
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+      background: rgba(0,0,0,0.25); 
+      backdrop-filter: blur(10px); 
+      padding: 0 40px; height: 64px; 
+      display: flex; align-items: center; 
+      justify-content: space-between; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+    } 
+    .nav-brand { display: flex; align-items: center; gap: 10px; } 
+    .nav-brand img { height: 44px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); } 
+    .nav-badge { 
+      background: rgba(255,255,255,0.2); 
+      color: white; font-size: 0.72rem; font-weight: 700; 
+      padding: 3px 10px; border-radius: 20px; 
+      letter-spacing: 0.5px; text-transform: uppercase; 
+      border: 1px solid rgba(255,255,255,0.3); 
+    } 
+    .nav-user { display: flex; align-items: center; gap: 12px; } 
+    .nav-user span { color: rgba(255,255,255,0.9); font-size: 0.92rem; font-weight: 500; } 
+    .btn-logout { 
+      background: rgba(255,255,255,0.15); 
+      color: white; border: 1px solid rgba(255,255,255,0.3); 
+      padding: 7px 18px; border-radius: 8px; 
+      cursor: pointer; font-size: 0.88rem; font-weight: 600; 
+      transition: all 0.2s; 
+    } 
+    .btn-logout:hover { background: rgba(255,255,255,0.28); } 
+ 
+    /* HERO */ 
+    .hero-bg { 
+      min-height: 220px; 
+      background: url('assets/wallpaper_travelgo.svg') center 40% / cover no-repeat; 
+      position: relative; 
+      display: flex; align-items: flex-end; 
+      justify-content: center; 
+      padding-bottom: 50px; 
+   } 
+    .hero-bg::before { 
+      content: ''; 
+      position: absolute; inset: 0; 
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.45) 100%); 
+    } 
+    .hero-text { 
+      position: relative; z-index: 2; 
+      text-align: center; color: white; 
+    } 
+    .hero-text h1 { font-size: 2rem; font-weight: 800; text-shadow: 0 2px 20px rgba(0,0,0,0.4); margin-bottom: 
+6px; } 
+    .hero-text p { font-size: 0.95rem; opacity: 0.85; } 
+ 
+    /* CONTENT */ 
+    .content-area { background: #F0F4FF; min-height: calc(100vh - 220px); padding: 0 0 60px; } 
+    .main-container { max-width: 900px; margin: 0 auto; padding: 0 24px; } 
+ 
+    /* FLOATING CARD */ 
+    .floating-card { 
+      background: white; border-radius: 20px; 
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12); 
+      padding: 28px 32px; 
+      margin: -36px auto 28px; 
+      position: relative; z-index: 10; 
+    } 
+    .floating-card h2 { 
+      font-size: 1.1rem; font-weight: 800; 
+      color: #1F2937; margin-bottom: 20px; 
+      padding-bottom: 12px; 
+      border-bottom: 2px solid #F3F4F6; 
+      display: flex; align-items: center; gap: 8px; 
+    } 
+ 
+    /* FORM */ 
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; } 
+    .form-grid .full { grid-column: 1 / -1; } 
+    .form-group { margin-bottom: 0; } 
+    .form-group label { 
+      display: block; margin-bottom: 6px; 
+      font-size: 0.75rem; font-weight: 700; 
+      color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; 
+    } 
+    .form-group input, .form-group select { 
+      width: 100%; padding: 11px 14px; 
+      border: 2px solid #E5E7EB; border-radius: 10px; 
+      font-size: 0.92rem; color: #1F2937; 
+      background: #FAFAFA; transition: all 0.2s;
+       } 
+    .form-group input:focus, .form-group select:focus { 
+      outline: none; border-color: #1A56DB; 
+      background: white; 
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.08); 
+    } 
+    .form-group input::placeholder { color: #D1D5DB; } 
+    .btn-tambah { 
+      background: linear-gradient(135deg, #1A56DB, #2563EB); 
+      color: white; border: none; padding: 12px 28px; 
+      border-radius: 10px; font-size: 0.95rem; font-weight: 700; 
+      cursor: pointer; margin-top: 20px; transition: all 0.2s; 
+      box-shadow: 0 4px 12px rgba(26,86,219,0.25); 
+    } 
+    .btn-tambah:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,86,219,0.35); } 
+ 
+    /* TABEL CARD */ 
+    .table-card { 
+      background: white; border-radius: 20px; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); 
+      padding: 28px 32px; 
+    } 
+    .table-card h2 { 
+      font-size: 1.1rem; font-weight: 800; 
+      color: #1F2937; margin-bottom: 20px; 
+      padding-bottom: 12px; 
+      border-bottom: 2px solid #F3F4F6; 
+      display: flex; align-items: center; gap: 8px; 
+    } 
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; } 
+    .admin-table thead tr { background: linear-gradient(90deg, #1A56DB, #2563EB); } 
+    .admin-table th { 
+      padding: 12px 16px; color: white; 
+      font-weight: 700; text-align: left; 
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; 
+    } 
+    .admin-table td { padding: 12px 16px; border-bottom: 1px solid #F3F4F6; color: #374151; } 
+    .admin-table tbody tr:hover td { background: #F0F4FF; } 
+    .admin-table tbody tr:last-child td { border-bottom: none; } 
+    .btn-hapus { 
+      background: #FEE2E2; color: #DC2626; 
+      border: none; padding: 5px 12px; 
+      border-radius: 6px; cursor: pointer; 
+      font-size: 0.82rem; font-weight: 700; transition: all 0.2s; 
+    } 
+    .btn-hapus:hover { background: #DC2626; color: white; } 
+    .empty-msg { color: #9CA3AF; font-size: 0.9rem; padding: 20px 0; text-align: center; } 
+     /* FOOTER */ 
+    .footer { background: #1F2937; color: #9CA3AF; text-align: center; padding: 20px; font-size: 0.85rem; margin-top: 40px; } 
+ 
+    @media (max-width: 600px) { 
+      .form-grid { grid-template-columns: 1fr; } 
+      .navbar { padding: 0 20px; } 
+      .floating-card, .table-card { padding: 20px; } 
+    } 
+  </style> 
+</head> 
+<body> 
+ 
+  <!-- NAVBAR --> 
+  <nav class="navbar"> 
+    <div class="nav-brand"> 
+      <img src="assets/logo_travelgo.svg" alt="TravelGo"> 
+      <span class="nav-badge">Merchant</span> 
+    </div> 
+    <div class="nav-user"> 
+      <span id="userName">Loading...</span> 
+      <button class="btn-logout" onclick="logout()">Keluar</button> 
+    </div> 
+  </nav> 
+ 
+  <!-- HERO --> 
+  <div class="hero-bg"> 
+    <div class="hero-text"> 
+      <h1> Panel Merchant</h1> 
+      <p>Kelola jadwal armada milik Anda</p> 
+    </div> 
+  </div> 
+ 
+  <!-- CONTENT --> 
+  <div class="content-area"> 
+    <div class="main-container"> 
+ 
+      <!-- FORM TAMBAH JADWAL --> 
+      <div class="floating-card"> 
+        <h2>  Tambah Jadwal Baru</h2> 
+        <div class="form-grid"> 
+          <div class="form-group full"> 
+            <label>Rute (Asal → Tujuan)</label> 
+            <input type="text" id="inputRute" placeholder="Contoh: Medan → Jakarta"> 
+          </div> 
+          <div class="form-group"> 
+            <label>Jenis Armada</label> 
+            <select id="inputArmada">
+                  <option value="pesawat"> Pesawat</option> 
+              <option value="kereta"> Kereta Api</option> 
+              <option value="kapal"> Kapal Laut</option> 
+              <option value="bus"> Bus</option> 
+            </select> 
+          </div> 
+          <div class="form-group"> 
+            <label>Tanggal</label> 
+            <input type="date" id="inputTanggal"> 
+          </div> 
+          <div class="form-group"> 
+            <label>Jam Berangkat</label> 
+            <input type="time" id="inputJam"> 
+          </div> 
+          <div class="form-group"> 
+            <label>Harga (Rp)</label> 
+            <input type="number" id="inputHarga" placeholder="Contoh: 150000"> 
+          </div> 
+          <div class="form-group"> 
+            <label>Kursi Tersedia</label> 
+            <input type="number" id="inputKursi" placeholder="Contoh: 40"> 
+          </div> 
+        </div> 
+        <button class="btn-tambah" onclick="submitJadwal()"> Tambah Jadwal</button> 
+      </div> 
+ 
+      <!-- TABEL JADWAL --> 
+      <div class="table-card"> 
+        <h2> Jadwal Saya</h2> 
+        <div id="merchantTable"> 
+          <p class="empty-msg">Memuat jadwal...</p> 
+        </div> 
+      </div> 
+ 
+    </div> 
+  </div> 
+ 
+  <footer class="footer"> 
+    <p>&copy; 2025 TravelGo. All rights reserved.</p> 
+  </footer> 
+ 
+  <script src="js/utils.js"></script> 
+  <script src="js/auth.js"></script> 
+  <script src="js/data.js"></script> 
+  <script src="js/merchant.js"></script> 
+ 
+</body> 
+</html>

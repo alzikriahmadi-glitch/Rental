@@ -1,0 +1,515 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Checkout - TravelGo</title> 
+  <link rel="stylesheet" href="css/style.css"> 
+  <link rel="stylesheet" href="css/components.css"> 
+  <link rel="stylesheet" href="css/responsive.css"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; } 
+     
+    /* BODY & FULL BACKGROUND INTERACTION */ 
+    body {  
+      font-family: 'Segoe UI', sans-serif;  
+      overflow-x: hidden; 
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(240, 244, 255, 0.2) 400px, #F0F4FF 
+100%), 
+                  url('assets/wallpaper_travelgo.svg') center top / cover no-repeat fixed; 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+    } 
+ 
+    /* NAVBAR */ 
+    .navbar { 
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+      background: rgba(0,0,0,0.25); 
+      backdrop-filter: blur(10px); 
+      -webkit-backdrop-filter: blur(10px); 
+      padding: 0 40px; height: 64px; 
+      display: flex; align-items: center; 
+      justify-content: space-between; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+    } 
+    .nav-brand { display: flex; align-items: center; } 
+    .nav-brand img { height: 44px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); } 
+    .nav-user { display: flex; align-items: center; gap: 12px; } 
+    .nav-user span { color: rgba(255,255,255,0.9); font-size: 0.92rem; font-weight: 500; } 
+    .btn-logout { 
+      background: rgba(255,255,255,0.15); 
+      color: white; border: 1px solid rgba(255,255,255,0.3); 
+ padding: 7px 18px; border-radius: 8px; 
+      cursor: pointer; font-size: 0.88rem; font-weight: 600; 
+      transition: all 0.2s; 
+    } 
+    .btn-logout:hover { background: rgba(255,255,255,0.28); } 
+ 
+    /* HERO AREA */ 
+    .hero-bg { 
+      min-height: 240px; 
+      position: relative; 
+      display: flex; align-items: flex-end; 
+      justify-content: center; 
+      padding-bottom: 60px; 
+      padding-top: 80px; 
+    } 
+    .hero-text { 
+      position: relative; z-index: 2; 
+      text-align: center; color: white; 
+    } 
+    .hero-text h1 { font-size: 2.2rem; font-weight: 800; text-shadow: 0 2px 12px rgba(0,0,0,0.5); margin-bottom: 
+8px; } 
+    .hero-text p { font-size: 1rem; opacity: 0.9; text-shadow: 0 1px 6px rgba(0,0,0,0.4); } 
+ 
+    /* CONTENT AREA */ 
+    .content-area {  
+      flex: 1; 
+      background: transparent;  
+      padding: 0 0 80px;  
+    } 
+    .main-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; } 
+ 
+    /* CHECKOUT WRAPPER */ 
+    .checkout-wrapper { 
+      display: flex; gap: 28px; 
+      margin: 0 auto; 
+      position: relative; z-index: 10; 
+      align-items: flex-start; 
+    } 
+ 
+    /* SUB-KOLOM */ 
+    .checkout-detail { flex: 1.4; } 
+    .checkout-payment { flex: 1; } 
+ 
+    /* MODERN GLASSMORPHISM CARD */ 
+    .co-card { 
+      background: rgba(255, 255, 255, 0.88);  
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+       border: 1px solid rgba(255, 255, 255, 0.5); 
+      border-radius: 24px; 
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12); 
+      padding: 32px; margin-bottom: 24px; 
+    } 
+    .co-card h2 { 
+      font-size: 1.15rem; font-weight: 800; 
+      color: #0F172A; margin-bottom: 20px; 
+      padding-bottom: 14px; 
+      border-bottom: 2px solid rgba(0, 0, 0, 0.05); 
+      display: flex; align-items: center; gap: 10px; 
+    } 
+    .co-card h3 { 
+      font-size: 1rem; font-weight: 700; 
+      color: #0F172A; margin-bottom: 16px; 
+      display: flex; align-items: center; gap: 8px; 
+      margin-top: 12px; 
+    } 
+ 
+    /* KONTANER LOGO MASKAPAI */ 
+    .airline-header-logo { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding-bottom: 14px; 
+      margin-bottom: 20px; 
+      border-bottom: 2px solid rgba(0, 0, 0, 0.05); 
+      min-height: 50px; 
+    } 
+    .airline-header-logo img { 
+      height: 45px; 
+      width: auto; 
+      object-fit: contain; 
+      mix-blend-mode: multiply;  
+    } 
+ 
+    /* DETAIL CARD & FORM */ 
+    .detail-card { 
+      background: rgba(255, 255, 255, 0.6);  
+      border-radius: 16px; 
+      border: 1px solid rgba(37, 99, 235, 0.15);  
+      padding: 20px; 
+      margin-bottom: 24px; 
+    } 
+    .detail-card p { font-size: 0.92rem; color: #334155; margin-bottom: 10px; line-height: 1.6; } 
+    .detail-card p:last-child { margin-bottom: 0; } 
+    .detail-card strong { color: #0F172A; font-weight: 600; }
+      .passenger-form { 
+      background: rgba(255, 255, 255, 0.6); 
+      border-radius: 16px; 
+      border: 1px solid rgba(0, 0, 0, 0.06);  
+      padding: 20px; 
+      margin-bottom: 16px; 
+    } 
+    .passenger-form h4 { font-size: 0.92rem; font-weight: 700; color: #2563EB; margin-bottom: 14px; } 
+    .form-group { margin-bottom: 14px; } 
+    .form-group label { display: block; margin-bottom: 6px; font-size: 0.75rem; font-weight: 700; color: #64748B; 
+text-transform: uppercase; } 
+    .form-group input { 
+      width: 100%; padding: 11px 16px; border: 1.5px solid rgba(0, 0, 0, 0.12); border-radius: 12px; 
+      font-size: 0.92rem; color: #0F172A; background: rgba(255, 255, 255, 0.9); transition: all 0.25s; 
+    } 
+    .form-group input:focus { outline: none; border-color: #2563EB; background: #ffffff; box-shadow: 0 0 0 4px 
+rgba(37, 99, 235, 0.12); } 
+ 
+    /* KONFIRMASI WRAPPER STYLE (FIXED STYLE) */ 
+    .konfirmasi-wrap { margin-bottom: 20px; text-align: left; } 
+    .konfirmasi-wrap label { display: block; margin-bottom: 8px; font-size: 0.75rem; font-weight: 700; color: 
+#64748B; text-transform: uppercase; letter-spacing: 0.5px; } 
+    .konfirmasi-wrap input { 
+      width: 100%; padding: 13px 16px; border: 1.5px solid rgba(0, 0, 0, 0.15); border-radius: 12px; 
+      font-size: 1.1rem; color: #0F172A; background: rgba(255, 255, 255, 0.9); font-weight: 700; 
+      text-align: center; letter-spacing: 2px; transition: all 0.25s; 
+    } 
+    .konfirmasi-wrap input:focus { outline: none; border-color: #D97706; background: #ffffff; box-shadow: 0 0 0 
+4px rgba(217, 119, 6, 0.15); } 
+ 
+    /* PRICE SUMMARY */ 
+    .price-summary { 
+      background: rgba(255, 255, 255, 0.6); border-radius: 16px; border: 1px solid rgba(37, 99, 235, 0.15); 
+padding: 18px; margin-bottom: 24px; 
+    } 
+    .price-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 
+0, 0.05); font-size: 0.92rem; color: #475569; } 
+    .price-row:last-child { border-bottom: none; } 
+    .price-row.total { font-weight: 800; font-size: 1.1rem; color: #2563EB; margin-top: 6px; } 
+ 
+    /* INDOMARET BOX */ 
+    .indomaret-box { 
+      background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border: 1.5px solid #F59E0B; border-radius: 
+18px; padding: 24px; text-align: center; margin-bottom: 18px; 
+    } 
+    .indomaret-box p { font-size: 0.9rem; color: #92400E; margin: 8px 0 4px; } 
+    .kode-bayar { 
+      font-size: 2rem; font-weight: 800; letter-spacing: 5px; color: #D97706; margin: 14px 0; font-family: 
+monospace;
+  background: white; border-radius: 12px; padding: 14px; border: 2px dashed #F59E0B; 
+    } 
+ 
+    /* BUTTONS */ 
+    .btn-indomaret { 
+      width: 100%; padding: 15px; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; 
+border: none; border-radius: 14px; 
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 18px 
+rgba(37,99,236,0.35); 
+    } 
+    .btn-indomaret:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,236,0.45); } 
+     
+    .btn-konfirmasi { 
+      width: 100%; padding: 15px; background: linear-gradient(135deg, #D97706, #F59E0B); color: white; border: 
+none; border-radius: 14px; 
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 18px 
+rgba(217,119,6,0.35); 
+    } 
+    .btn-konfirmasi:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(217,119,6,0.45); } 
+ 
+    /* KOMPONEN TIKET */ 
+    .tiket-box { 
+      background: #ffffff; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 16px; 
+      overflow: hidden; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+    } 
+    .tiket-brand-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      background: #0F172A; 
+      padding: 18px 24px; 
+      border-bottom: 3px solid #F59E0B; 
+    } 
+    .tiket-logo-brand { 
+      height: 32px; 
+      width: auto; 
+      object-fit: contain; 
+    } 
+    .tiket-status-badge { 
+      background: #10B981; 
+      color: white; 
+      font-size: 0.7rem; 
+      font-weight: 800; 
+      padding: 4px 10px; 
+      border-radius: 6px; 
+      letter-spacing: 1px;
+       } 
+    .tiket-body { 
+      padding: 24px; 
+    } 
+    #tiketDetail { 
+      margin-bottom: 15px; 
+    } 
+    #tiketDetail .tiket-row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 10px 0; 
+      border-bottom: 1px solid #F1F5F9; 
+      font-size: 0.88rem; 
+    } 
+    #tiketDetail .tiket-row span:first-child { color: #64748B; } 
+    #tiketDetail .tiket-row span:last-child { font-weight: 700; color: #0F172A; } 
+ 
+    .tiket-section-title { 
+      font-size: 0.8rem; 
+      font-weight: 800; 
+      color: #475569; 
+      text-transform: uppercase; 
+      margin: 20px 0 8px; 
+      padding-bottom: 4px; 
+      border-bottom: 1px solid #E2E8F0; 
+    } 
+    .tiket-passenger-box { 
+      background: #F8FAFC; 
+      border: 1px solid #E2E8F0; 
+      border-radius: 12px; 
+      padding: 14px 18px; 
+    } 
+    .passenger-item-print { 
+      display: flex; 
+      justify-content: space-between; 
+      font-size: 0.88rem; 
+      color: #0F172A; 
+      padding: 4px 0; 
+    } 
+    .tiket-footer-space { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-top: 24px; 
+      padding-top: 16px; 
+      border-top: 2px dashed #CBD5E1; 
+    } 
+    .barcode-wrapper {
+         text-align: left; 
+    } 
+    .tiket-barcode-img { 
+      height: 45px; 
+      max-width: 180px; 
+      object-fit: contain; 
+    } 
+    .barcode-text { 
+      font-size: 0.65rem; 
+      color: #64748B; 
+      margin-top: 4px; 
+    } 
+    .stamp-verified { 
+      border: 2px dashed #10B981; 
+      padding: 4px 10px; 
+      border-radius: 6px; 
+      font-size: 0.7rem; 
+      font-weight: 800; 
+      color: #10B981; 
+      letter-spacing: 0.5px; 
+      transform: rotate(-3deg); 
+    } 
+ 
+    .tiket-footer { 
+      padding: 16px 24px; 
+      display: flex; 
+      gap: 12px; 
+      border-top: 1px solid #F1F5F9; 
+      background: #F8FAFC; 
+    } 
+    .btn-dashboard { 
+      flex: 1; padding: 12px; background: #64748B; color: white; border: none; border-radius: 10px; 
+      font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; 
+    } 
+    .btn-dashboard:hover { background: #475569; } 
+    .btn-cetak { 
+      flex: 1; padding: 12px; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; 
+      border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; 
+    } 
+    .btn-cetak:hover { transform: translateY(-1px); } 
+ 
+    /* FOOTER */ 
+    .footer {  
+      background: rgba(15, 23, 42, 0.95); color: #94A3B8; text-align: center; padding: 24px; font-size: 0.85rem; 
+      border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto; 
+    } 
+ 
+    @media (max-width: 900px) {
+        .checkout-wrapper { flex-direction: column; gap: 20px; } 
+      .navbar { padding: 0 20px; } 
+      .co-card { padding: 24px; } 
+      .hero-bg { min-height: 200px; padding-bottom: 40px; } 
+      .hero-text h1 { font-size: 1.8rem; } 
+    } 
+ 
+    /* ========= 
+       PRINT OUT 
+       ========= */ 
+    @media print { 
+      .navbar, .hero-bg, .footer, .checkout-detail, .price-summary,  
+      #step-btn, #step-kode, .tiket-footer, button, .airline-header-logo { 
+        display: none !important; 
+      } 
+       
+      body, .content-area, .main-container, .checkout-wrapper, .checkout-payment, .co-card { 
+        background: #ffffff !important; 
+        color: #000000 !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        box-shadow: none !important; 
+        display: block !important; 
+        border: none !important; 
+        backdrop-filter: none !important; 
+        -webkit-backdrop-filter: none !important; 
+      } 
+       
+      #step-tiket {  
+        display: block !important;  
+        width: 100% !important;  
+      } 
+       
+      .tiket-box { 
+        border: 2px dashed #000000 !important; 
+        box-shadow: none !important; 
+        background: #ffffff !important; 
+        border-radius: 0 !important; 
+      } 
+       
+      .tiket-brand-header { 
+        background: #ffffff !important;  
+        border-bottom: 3px solid #000000 !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+      } 
+       
+      .tiket-logo-brand {
+           filter: invert(1) brightness(0);  
+      } 
+       
+      .tiket-status-badge { 
+        border: 1px solid #000000 !important; 
+        color: #000000 !important; 
+        background: transparent !important; 
+      } 
+       
+      .tiket-body {  
+        padding: 20px !important;  
+        background: #ffffff !important;  
+      } 
+    } 
+  </style> 
+</head> 
+<body> 
+ 
+  <nav class="navbar"> 
+    <div class="nav-brand"> 
+      <img src="assets/logo_travelgo.svg" alt="TravelGo"> 
+    </div> 
+    <div class="nav-user"> 
+      <span id="userName">Loading...</span> 
+      <button class="btn-logout" onclick="logout()">Keluar</button> 
+    </div> 
+  </nav> 
+ 
+  <div class="hero-bg"> 
+    <div class="hero-text"> 
+      <h1>Detail Pemesanan</h1> 
+      <p>Lengkapi data dan selesaikan pembayaran Anda</p> 
+    </div> 
+  </div> 
+ 
+  <div class="content-area"> 
+    <div class="main-container"> 
+      <div class="checkout-wrapper"> 
+ 
+        <div class="checkout-detail"> 
+          <div class="co-card"> 
+            <h2>Detail Pemesanan</h2> 
+            <div id="bookingDetail" class="detail-card">Loading...</div> 
+ 
+            <h3>     Data Penumpang</h3> 
+            <div id="passengerForms"></div> 
+          </div> 
+        </div>
+          <div class="checkout-payment"> 
+          <div class="co-card"> 
+             
+            <div id="airlineHeaderLogo" class="airline-header-logo"></div> 
+ 
+            <div class="price-summary"> 
+              <div class="price-row"><span>Harga Tiket</span><span id="basePrice">-</span></div> 
+              <div class="price-row"><span>Biaya Admin</span><span id="adminFee">-</span></div> 
+              <div class="price-row total"><span>Total Bayar</span><span id="totalPrice">-</span></div> 
+            </div> 
+ 
+            <div id="step-btn"> 
+              <button class="btn-indomaret" onclick="generateKode()"> 
+                 Bayar via Indomaret 
+              </button> 
+            </div> 
+ 
+            <div id="step-kode" style="display:none;"> 
+              <div class="indomaret-box"> 
+<div id="paymentProviderTitle" style="font-size:1.2rem; font-weight:800; color:#1E3A8A; margin-bottom:8px;">INDOMARET PAYMENT SYSTEM</div> 
+                <p>Tunjukkan kode ini ke kasir Indomaret:</p> 
+                <div class="kode-bayar" id="kodeBayar">-</div> 
+                <p class="kode-hint">Bayar sesuai total, lalu masukkan kode konfirmasi di bawah</p> 
+              </div> 
+              <div class="konfirmasi-wrap"> 
+                <label for="inputKode">Masukkan Kode Konfirmasi</label> 
+                <input type="text" id="inputKode" placeholder="IDM-XXXXXX"> 
+              </div> 
+              <button class="btn-konfirmasi" onclick="konfirmasiBayar()"> 
+                 Konfirmasi Pembayaran 
+              </button> 
+            </div> 
+ 
+            <div id="step-tiket" style="display:none;"> 
+              <div class="tiket-box"> 
+                 
+                <div class="tiket-brand-header"> 
+                  <img src="assets/logo_travelgo.svg" alt="TravelGo" class="tiket-logo-brand"> 
+                  <div class="tiket-status-badge">E-TICKET APPROVED</div> 
+                </div> 
+ 
+                <div class="tiket-body"> 
+                  <div id="tiketDetail"></div> 
+                   
+                  <div class="tiket-section-title">Penumpang / Passengers</div> 
+                  <div class="tiket-passenger-box" id="tiketPassengerList"></div>
+                   <div class="tiket-footer-space"> 
+                    <div class="barcode-wrapper"> 
+                      <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=TRAVELGO
+BOARDING&scale=2&rotate=N&includetext" alt="Barcode" class="tiket-barcode-img"> 
+                      <p class="barcode-text">*Tunjukkan barcode saat Check-In di Bandara*</p> 
+                    </div> 
+                    <div class="stamp-verified"> 
+                      ISSUED VERIFIED 
+                    </div> 
+                  </div> 
+                </div> 
+ 
+                <div class="tiket-footer"> 
+                  <button class="btn-dashboard" onclick="window.location.href='dashboard.html'"> 
+                      Kembali 
+                  </button> 
+                  <button class="btn-cetak" onclick="cetakTiket()"> 
+                      Cetak Tiket 
+                  </button> 
+                </div> 
+ 
+              </div> 
+            </div> 
+ 
+          </div> 
+        </div> 
+ 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <footer class="footer"> 
+    <p>&copy; 2026 TravelGo. All rights reserved.</p> 
+  </footer> 
+ 
+  <script src="js/utils.js"></script> 
+  <script src="js/data.js"></script> 
+  <script src="js/auth.js"></script> 
+  <script src="js/payment.js"></script> 
+ 
+</body> 
+</html>

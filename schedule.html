@@ -1,0 +1,539 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Jadwal - TravelGo</title> 
+  <link rel="stylesheet" href="css/style.css"> 
+  <link rel="stylesheet" href="css/components.css"> 
+  <link rel="stylesheet" href="css/responsive.css"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; } 
+    body { font-family: 'Segoe UI', sans-serif; overflow-x: hidden; } 
+ 
+    /* NAVBAR */ 
+    .navbar { 
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+      background: rgba(0,0,0,0.25); 
+      backdrop-filter: blur(10px); 
+      padding: 0 40px; height: 64px; 
+      display: flex; align-items: center; 
+      justify-content: space-between; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+    }
+      .nav-brand { display: flex; align-items: center; } 
+    .nav-brand img { height: 44px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); } 
+    .nav-user { display: flex; align-items: center; gap: 12px; } 
+    .nav-user span { color: rgba(255,255,255,0.9); font-size: 0.92rem; font-weight: 500; } 
+    .btn-logout { 
+      background: rgba(255,255,255,0.15); 
+      color: white; border: 1px solid rgba(255,255,255,0.3); 
+      padding: 7px 18px; border-radius: 8px; 
+      cursor: pointer; font-size: 0.88rem; font-weight: 600; 
+      transition: all 0.2s; 
+    } 
+    .btn-logout:hover { background: rgba(255,255,255,0.28); } 
+ 
+    /* HERO */ 
+    .hero-bg { 
+      min-height: 280px; 
+      background: url('assets/wallpaper_travelgo.svg') center 30% / cover no-repeat; 
+      position: relative; 
+      display: flex; align-items: flex-end; 
+      justify-content: center; 
+      padding-bottom: 60px; 
+    } 
+    .hero-bg::before { 
+      content: ''; 
+      position: absolute; inset: 0; 
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.4) 100%); 
+    } 
+    .hero-text { position: relative; z-index: 2; text-align: center; color: white; } 
+    .hero-text h1 { font-size: 2.2rem; font-weight: 800; text-shadow: 0 2px 20px rgba(0,0,0,0.4); margin-bottom: 
+8px; } 
+    .hero-text p { font-size: 1rem; opacity: 0.85; } 
+ 
+    /* CONTENT AREA */ 
+    .content-area { background: #F0F4FF; min-height: calc(100vh - 280px); padding: 0 0 60px; } 
+    .main-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; } 
+ 
+    /* SEARCH FLOATING */ 
+    .search-floating { 
+      background: rgba(255,255,255,0.97); 
+      backdrop-filter: blur(16px); 
+      border-radius: 20px; 
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15); 
+      padding: 24px 32px; 
+      margin: -40px auto 32px; 
+      position: relative; z-index: 10; 
+      max-width: 920px; 
+    } 
+    .search-floating h2 {
+        font-size: 1rem; font-weight: 700; 
+      color: #1A56DB; margin-bottom: 16px; 
+      display: flex; align-items: center; gap: 8px; 
+    } 
+    .search-inline { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; } 
+    .search-inline .form-group { flex: 1; min-width: 130px; margin-bottom: 0; } 
+    .search-inline label, .counter-label { 
+      font-size: 0.72rem; font-weight: 700; 
+      color: #6B7280; text-transform: uppercase; 
+      letter-spacing: 0.6px; display: block; margin-bottom: 7px; 
+    } 
+    .search-inline select { 
+      width: 100%; padding: 10px 14px; 
+      border: 2px solid #E5E7EB; border-radius: 10px; 
+      font-size: 0.92rem; color: #1F2937; 
+      background: #FAFAFA; cursor: pointer; transition: border 0.2s; 
+    } 
+    .search-inline select:focus { outline: none; border-color: #1A56DB; background: white; } 
+ 
+    /* COUNTER */ 
+    .counter-group { display: flex; flex-direction: column; } 
+    .counter { 
+      display: flex; align-items: center; gap: 10px; 
+      background: #F9FAFB; border: 2px solid #E5E7EB; 
+      border-radius: 10px; padding: 6px 12px; 
+    } 
+    .counter button { 
+      width: 28px; height: 28px; 
+      border: 2px solid #1A56DB; 
+      background: white; border-radius: 50%; 
+      cursor: pointer; font-size: 1rem; 
+      color: #1A56DB; font-weight: 800; 
+      transition: all 0.2s; line-height: 1; 
+    } 
+    .counter button:hover { background: #1A56DB; color: white; } 
+    .counter span { font-weight: 800; font-size: 1rem; min-width: 20px; text-align: center; color: #1F2937; } 
+    .counter-hint { font-size: 0.65rem; color: #9CA3AF; margin-top: 4px; } 
+ 
+    /* TOTAL PENUMPANG */ 
+    .total-pax { 
+      display: flex; align-items: center; justify-content: center; 
+      background: #EFF6FF; border: 2px solid #BFDBFE; 
+      border-radius: 10px; padding: 6px 16px; 
+      font-size: 0.88rem; font-weight: 700; color: #1A56DB; 
+      white-space: nowrap; 
+    } 
+    .total-pax span { font-size: 1.1rem; margin-right: 6px; }
+
+     /* LEGEND */ 
+    .legend-bar { 
+      display: flex; gap: 20px; align-items: center; 
+      margin-bottom: 20px; flex-wrap: wrap; 
+      padding: 12px 20px; 
+      background: white; border-radius: 12px; 
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06); 
+    } 
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; color: #6B7280; font-weight: 500; 
+} 
+    .legend-dot { width: 16px; height: 16px; border-radius: 5px; } 
+    .legend-dot.available { background: #DBEAFE; border: 2px solid #93C5FD; } 
+    .legend-dot.selected { background: #1A56DB; } 
+    .legend-dot.past { background: #F3F4F6; border: 1px solid #E5E7EB; } 
+ 
+    /* KALENDER */ 
+    .calendar-section { margin-bottom: 40px; } 
+    .calendar-section > h3 { font-size: 1.1rem; font-weight: 700; color: #1F2937; margin-bottom: 16px; display: 
+flex; align-items: center; gap: 8px; } 
+    .calendar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } 
+    .cal-month { background: white; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: 
+hidden; transition: box-shadow 0.2s; } 
+    .cal-month:hover { box-shadow: 0 6px 24px rgba(26,86,219,0.13); } 
+    .cal-month-title { background: linear-gradient(90deg, #1A56DB, #2563EB); color: white; text-align: center; 
+padding: 12px; font-weight: 700; font-size: 0.92rem; } 
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); background: #EFF6FF; border-bottom: 
+1px solid #DBEAFE; } 
+    .cal-weekdays span { text-align: center; padding: 6px 0; font-size: 0.65rem; font-weight: 700; color: #3B82F6; 
+text-transform: uppercase; } 
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 5px; gap: 2px; } 
+    .cal-day { min-height: 52px; padding: 3px 2px; text-align: center; border-radius: 8px; cursor: default; } 
+    .cal-day.empty { background: transparent; } 
+    .cal-day.has-schedule { background: #DBEAFE; cursor: pointer; border: 1.5px solid #93C5FD; transition: all 
+0.15s; } 
+    .cal-day.has-schedule:hover { background: #BFDBFE; border-color: #60A5FA; transform: scale(1.06); z-index: 
+1; position: relative; box-shadow: 0 4px 12px rgba(26,86,219,0.18); } 
+    .cal-day.selected { background: linear-gradient(135deg, #1A56DB, #2563EB) !important; border-color: 
+#1A56DB !important; box-shadow: 0 4px 16px rgba(26,86,219,0.35) !important; transform: scale(1.06); 
+position: relative; z-index: 1; } 
+    .cal-day.selected .cal-day-num { color: white !important; } 
+    .cal-day.selected .cal-price { color: #BAE6FD !important; } 
+    .cal-day.past { opacity: 0.3; cursor: not-allowed; } 
+    .cal-day-num { font-size: 0.8rem; font-weight: 700; color: #1E3A8A; display: block; margin-top: 3px; } 
+    .cal-day:not(.has-schedule):not(.empty) .cal-day-num { color: #9CA3AF; } 
+    .cal-price { font-size: 0.56rem; color: #1D4ED8; font-weight: 800; display: block; line-height: 1.3; margin-top: 
+2px; } 
+ 
+    /* HASIL */ 
+    .results-section { margin-bottom: 48px; }
+       .selected-date-info { 
+      background: linear-gradient(90deg, #EFF6FF, #F0FDF4); 
+      border-left: 4px solid #1A56DB; 
+      border-radius: 0 12px 12px 0; 
+      padding: 14px 20px; margin-bottom: 20px; 
+      font-weight: 700; color: #1E3A8A; font-size: 0.95rem; 
+    } 
+    .schedule-card { 
+      background: white; border-radius: 16px; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); 
+      padding: 22px 28px; margin-bottom: 16px; 
+      display: flex; align-items: center; 
+      justify-content: space-between; flex-wrap: wrap; 
+      gap: 20px; transition: all 0.2s; border: 2px solid transparent; 
+    } 
+    .schedule-card:hover { border-color: #93C5FD; box-shadow: 0 6px 24px rgba(26,86,219,0.12); transform: 
+translateY(-2px); } 
+    .sc-operator { font-weight: 800; font-size: 1rem; color: #1F2937; display: flex; align-items: center; gap: 10px; } 
+    .sc-operator img { height: 32px; width: 32px; border-radius: 10px; object-fit: cover; box-shadow: 0 2px 8px rgba(15,23,42,0.1); } 
+    .sc-vehicle-img { height: 36px; width: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(148,163,184,0.18); box-shadow: 0 3px 12px rgba(15,23,42,0.08); margin-right: 10px; } 
+    .sc-badge { display: inline-block; font-size: 0.72rem; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 20px; font-weight: 700; margin-top: 5px; border: 1px solid #BFDBFE; } 
+    .sc-route { display: flex; align-items: center; gap: 16px; } 
+    .sc-time-block { text-align: center; } 
+    .sc-time { font-size: 1.5rem; font-weight: 800; color: #1A56DB; } 
+    .sc-city { font-size: 0.78rem; color: #6B7280; margin-top: 2px; } 
+    .sc-middle { text-align: center; } 
+    .sc-arrow-line { display: flex; align-items: center; gap: 4px; color: #9CA3AF; } 
+    .sc-arrow-line::before, .sc-arrow-line::after { content: ''; display: block; height: 1.5px; width: 28px; background: 
+#D1D5DB; } 
+    .sc-duration { font-size: 0.75rem; color: #6B7280; margin-top: 4px; font-weight: 600; } 
+    .sc-info { font-size: 0.83rem; color: #6B7280; } 
+    .sc-info span { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; } 
+    .sc-price-block { text-align: right; } 
+    .sc-price-num { font-size: 1.35rem; font-weight: 800; color: #0E9F6E; } 
+    .sc-price-info { font-size: 0.78rem; color: #9CA3AF; margin-top: 2px; } 
+    .btn-pesan { 
+      background: linear-gradient(135deg, #1A56DB, #2563EB); 
+      color: white; border: none; padding: 11px 22px; 
+      border-radius: 10px; font-size: 0.9rem; font-weight: 700; 
+      cursor: pointer; margin-top: 10px; transition: all 0.2s; 
+      width: 100%; box-shadow: 0 4px 12px rgba(26,86,219,0.25); 
+    } 
+    .btn-pesan:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,86,219,0.35); } 
+    .empty-state { text-align: center; padding: 56px 24px; background: white; border-radius: 16px; box-shadow: 0 
+2px 12px rgba(0,0,0,0.06); color: #9CA3AF; font-size: 1rem; } 
+    .empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 12px; } 
+ 
+    /* FOOTER */ 
+    .footer { background: #1F2937; color: #9CA3AF; text-align: center; padding: 20px; font-size: 0.85rem; } 
+      @media (max-width: 900px) { .calendar-grid { grid-template-columns: repeat(2, 1fr); } } 
+    @media (max-width: 560px) { 
+      .calendar-grid { grid-template-columns: 1fr; } 
+      .search-inline { flex-direction: column; } 
+      .search-floating { padding: 20px; margin: -30px 16px 24px; } 
+      .schedule-card { flex-direction: column; align-items: flex-start; } 
+      .sc-price-block { text-align: left; } 
+      .hero-text h1 { font-size: 1.6rem; } 
+      .navbar { padding: 0 20px; } 
+    } 
+  </style> 
+</head> 
+<body> 
+ 
+  <!-- NAVBAR --> 
+  <nav class="navbar"> 
+    <div class="nav-brand"> 
+      <img src="assets/logo_travelgo.svg" alt="TravelGo"> 
+    </div> 
+    <div class="nav-user"> 
+      <span id="userName"></span> 
+      <button class="btn-logout" onclick="logout()">Keluar</button> 
+    </div> 
+  </nav> 
+ 
+  <!-- HERO --> 
+  <div class="hero-bg"> 
+    <div class="hero-text"> 
+      <h1 id="transportTitle">Pilih Jadwal     </h1> 
+      <p>Klik tanggal pada kalender untuk melihat jadwal dan harga</p> 
+    </div> 
+  </div> 
+ 
+  <!-- CONTENT --> 
+  <div class="content-area"> 
+    <div class="main-container"> 
+ 
+      <!-- SEARCH FLOATING --> 
+      <div class="search-floating"> 
+        <h2>    Filter Pencarian</h2> 
+        <div class="search-inline"> 
+          <div class="form-group"> 
+            <label>Kota Asal</label> 
+            <select id="cityFrom" onchange="renderCalendars()"> 
+              <option value="">-- Semua Kota --</option> 
+            </select> 
+          </div> 
+          <div class="form-group">
+             <label>Kota Tujuan</label> 
+            <select id="cityTo" onchange="renderCalendars()"> 
+              <option value="">-- Semua Kota --</option> 
+            </select> 
+          </div> 
+          <div class="counter-group"> 
+            <span class="counter-label">Dewasa</span> 
+            <div class="counter"> 
+              <button onclick="changePassenger('dewasa', -1)">−</button> 
+              <span id="dewasaCount">1</span> 
+              <button onclick="changePassenger('dewasa', 1)">+</button> 
+            </div> 
+            <div class="counter-hint">Min. 1 orang</div> 
+          </div> 
+          <div class="counter-group"> 
+            <span class="counter-label">Anak (2-12 thn)</span> 
+            <div class="counter"> 
+              <button onclick="changePassenger('anak', -1)">−</button> 
+              <span id="anakCount">0</span> 
+              <button onclick="changePassenger('anak', 1)">+</button> 
+            </div> 
+            <div class="counter-hint">Opsional</div> 
+          </div> 
+          <div class="counter-group"> 
+            <span class="counter-label">Total</span> 
+            <div class="total-pax"> 
+              <span>  </span> 
+              <span id="totalPax">1 orang</span> 
+            </div> 
+          </div> 
+        </div> 
+      </div> 
+ 
+      <!-- LEGEND --> 
+      <div class="legend-bar"> 
+        <div class="legend-item"><div class="legend-dot available"></div> Ada jadwal & harga</div> 
+        <div class="legend-item"><div class="legend-dot selected"></div> Tanggal dipilih</div> 
+        <div class="legend-item"><div class="legend-dot past"></div> Tidak tersedia</div> 
+      </div> 
+ 
+      <!-- KALENDER --> 
+      <div class="calendar-section"> 
+        <h3> Jadwal Keberangkatan 2026</h3> 
+        <div class="calendar-grid" id="calendarGrid"></div> 
+      </div> 
+ 
+      <!-- HASIL --> 
+      <div id="scheduleResults" class="results-section"></div> 
+ </div> 
+  </div> 
+ 
+  <footer class="footer"> 
+    <p>&copy; 2025 TravelGo. All rights reserved.</p> 
+  </footer> 
+ 
+  <script src="js/utils.js"></script> 
+  <script src="js/data.js"></script> 
+  <script src="js/auth.js"></script> 
+  <script> 
+    const session = requireLogin(); 
+    document.getElementById('userName').textContent = session.name; 
+ 
+    let dewasa = 1; 
+    let anak = 0; 
+    let passengers = 1; 
+    let selectedDate = null; 
+    const transportType = sessionStorage.getItem('selectedTransport') || 'pesawat'; 
+ 
+    const icons = { pesawat: '✈️', kereta: '🚆', kapal: '🛳️', bus: '🚌' }; 
+    const names = { pesawat: 'Pesawat', kereta: 'Kereta Api', kapal: 'Kapal Laut', bus: 'Bus' }; 
+    document.getElementById('transportTitle').textContent = `Jadwal ${icons[transportType]} ${names[transportType]} 2026`; 
+ 
+    const MONTHS = 
+['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; 
+    const DAYS = ['Min','Sen','Sel','Rab','Kam','Jum','Sab']; 
+    const DAY_NAMES = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']; 
+ 
+    function populateCities() { 
+      const schedules = JSON.parse(localStorage.getItem('tg_schedules') || '[]'); 
+      const cities = new Set(); 
+      schedules.filter(s => s.type === transportType).forEach(s => { 
+        cities.add(s.from); cities.add(s.to); 
+      }); 
+      const fromSelect = document.getElementById('cityFrom'); 
+      const toSelect = document.getElementById('cityTo'); 
+      cities.forEach(city => { 
+        fromSelect.innerHTML += `<option value="${city}">${city}</option>`; 
+        toSelect.innerHTML += `<option value="${city}">${city}</option>`; 
+      }); 
+    } 
+ 
+    function changePassenger(type, delta) { 
+      if (type === 'dewasa') { 
+        dewasa = Math.max(1, Math.min(9, dewasa + delta)); 
+   document.getElementById('dewasaCount').textContent = dewasa; 
+      } else { 
+        anak = Math.max(0, Math.min(9, anak + delta)); 
+        document.getElementById('anakCount').textContent = anak; 
+      } 
+      passengers = dewasa + anak; 
+      document.getElementById('totalPax').textContent = passengers + ' orang'; 
+      if (selectedDate) showSchedules(selectedDate); 
+    } 
+ 
+    function getSchedulesForDate(dateStr) { 
+      const schedules = JSON.parse(localStorage.getItem('tg_schedules') || '[]'); 
+      const from = document.getElementById('cityFrom').value; 
+      const to = document.getElementById('cityTo').value; 
+      const date = new Date(dateStr); 
+      const dayName = DAY_NAMES[date.getDay()]; 
+      return schedules.filter(s => 
+        s.type === transportType && 
+        (from === '' || s.from === from) && 
+        (to === '' || s.to === to) && 
+        s.days.includes(dayName) && 
+        s.seats >= passengers 
+      ); 
+    } 
+ 
+    function renderCalendars() { 
+      const grid = document.getElementById('calendarGrid'); 
+      grid.innerHTML = ''; 
+      const today = new Date(); 
+      today.setHours(0,0,0,0); 
+ 
+      for (let m = 0; m < 12; m++) { 
+        const monthEl = document.createElement('div'); 
+        monthEl.className = 'cal-month'; 
+ 
+        const title = document.createElement('div'); 
+        title.className = 'cal-month-title'; 
+        title.textContent = MONTHS[m] + ' 2026'; 
+        monthEl.appendChild(title); 
+ 
+        const weekdays = document.createElement('div'); 
+        weekdays.className = 'cal-weekdays'; 
+        DAYS.forEach(d => { 
+          const span = document.createElement('span'); 
+          span.textContent = d; 
+          weekdays.appendChild(span); 
+        }); 
+        monthEl.appendChild(weekdays);
+         const daysEl = document.createElement('div'); 
+        daysEl.className = 'cal-days'; 
+ 
+        const firstDay = new Date(2026, m, 1).getDay(); 
+        const totalDays = new Date(2026, m + 1, 0).getDate(); 
+ 
+        for (let i = 0; i < firstDay; i++) { 
+          const empty = document.createElement('div'); 
+          empty.className = 'cal-day empty'; 
+          daysEl.appendChild(empty); 
+        } 
+ 
+        for (let d = 1; d <= totalDays; d++) { 
+          const dayEl = document.createElement('div'); 
+          dayEl.className = 'cal-day'; 
+ 
+          const dateStr = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; 
+          const dateObj = new Date(2026, m, d); 
+          const isPast = dateObj < today; 
+          const schedules = getSchedulesForDate(dateStr); 
+          const hasSchedule = schedules.length > 0; 
+ 
+          if (isPast) { 
+            dayEl.classList.add('past'); 
+            dayEl.innerHTML = `<span class="cal-day-num">${d}</span>`; 
+          } else if (hasSchedule) { 
+            dayEl.classList.add('has-schedule'); 
+            if (selectedDate === dateStr) dayEl.classList.add('selected'); 
+            const minPrice = Math.min(...schedules.map(s => s.price)); 
+            dayEl.innerHTML = ` 
+              <span class="cal-day-num">${d}</span> 
+              <span class="cal-price">Rp ${(minPrice/1000).toFixed(0)}rb</span> 
+            `; 
+            dayEl.onclick = () => selectDate(dateStr); 
+          } else { 
+            dayEl.innerHTML = `<span class="cal-day-num">${d}</span>`; 
+          } 
+ 
+          daysEl.appendChild(dayEl); 
+        } 
+ 
+        monthEl.appendChild(daysEl); 
+        grid.appendChild(monthEl); 
+      } 
+    } 
+ 
+    function selectDate(dateStr) {
+       selectedDate = dateStr; 
+      renderCalendars(); 
+      showSchedules(dateStr); 
+      setTimeout(() => { 
+        document.getElementById('scheduleResults').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      }, 100); 
+    } 
+ 
+    function getOperatorLogo(operator) { 
+      const name = operator.toLowerCase(); 
+      if (name.includes('lion')) return '<img src="assets/lion_air.svg" alt="Lion Air">'; 
+      if (name.includes('garuda')) return '<img src="assets/garuda_indonesia.svg" alt="Garuda Indonesia">'; 
+      if (name.includes('argo') || name.includes('bromo') || name.includes('kereta')) return '<img src="assets/argo_bromo.svg" alt="Argo Bromo">'; 
+      if (name.includes('pelni') || name.includes('kapal')) return '<img src="assets/pelni.svg" alt="Pelni">'; 
+      if (name.includes('sumber') || name.includes('alam') || name.includes('bus')) return '<img src="assets/sumber_alam.svg" alt="Sumber Alam">'; 
+      return '<img src="assets/logo_travelgo.svg" alt="TravelGo">'; 
+    } 
+    function showSchedules(dateStr) { 
+      const results = getSchedulesForDate(dateStr); 
+      const container = document.getElementById('scheduleResults'); 
+      const dateFormatted = new Date(dateStr).toLocaleDateString('id-ID', { 
+        weekday:'long', year:'numeric', month:'long', day:'numeric' 
+      }); 
+ 
+      if (results.length === 0) { 
+        container.innerHTML = ` 
+          <div class="selected-date-info">             ${dateFormatted}</div> 
+          <div class="empty-state"> 
+            <div class="empty-icon">   </div> 
+            Tidak ada jadwal tersedia untuk tanggal dan rute ini. 
+          </div>`; 
+        return; 
+      } 
+ 
+      container.innerHTML = ` 
+        <div class="selected-date-info">             ${dateFormatted} — ${results.length} jadwal tersedia</div> 
+        ${results.map(s => ` 
+          <div class="schedule-card"> 
+            <div> 
+              <div class="sc-operator"><img class="sc-vehicle-img" src="assets/${s.type}.png" alt="${s.type}">${getOperatorLogo(s.operator)}<span>${s.operator}</span></div> 
+              <span class="sc-badge">${s.class}</span> 
+            </div> 
+            <div class="sc-route"> 
+              <div class="sc-time-block"> 
+                <div class="sc-time">${s.departTime}</div> 
+                <div class="sc-city">${s.from}</div> 
+              </div> 
+              <div class="sc-middle"> 
+                <div class="sc-arrow-line">→</div> 
+                <div class="sc-duration">${s.duration}</div> 
+              </div> 
+              <div class="sc-time-block"> 
+                <div class="sc-time">${s.arriveTime}</div> 
+                <div class="sc-city">${s.to}</div> 
+              </div> 
+            </div> 
+            <div class="sc-info">
+                <span>         ${s.seats} kursi tersisa</span> 
+              <span>     ${dewasa} dewasa${anak > 0 ? ` · ${anak} anak` : ''}</span> 
+            </div> 
+            <div class="sc-price-block"> 
+              <div class="sc-price-num">Rp ${(s.price * passengers).toLocaleString('id-ID')}</div> 
+              <div class="sc-price-info">untuk ${passengers} penumpang</div> 
+              <button class="btn-pesan" onclick="selectSchedule('${s.id}', '${dateStr}')"> 
+                Pesan Sekarang → 
+              </button> 
+            </div> 
+          </div> 
+        `).join('')} 
+      `; 
+    } 
+ 
+    function selectSchedule(scheduleId, date) { 
+      sessionStorage.setItem('booking', JSON.stringify({ 
+        scheduleId, date, passengers, dewasa, anak 
+      })); 
+      window.location.href = 'checkout.html'; 
+    } 
+ 
+    populateCities(); 
+    renderCalendars(); 
+  </script> 
+ 
+</body> 
+</html>
